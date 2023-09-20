@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "redis-stream-log"
+version = "0.1.0"
+description = ""
+authors = ["안성철 <scahn@huray.net>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "0.103.1"
+pydantic = "1.10.11"
+uvicorn = "0.23.2"
+faker = "^19.6.1"
+redis = "^5.0.0"
+jinja2 = "^3.1.2"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.9.1"
+isort = "^5.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

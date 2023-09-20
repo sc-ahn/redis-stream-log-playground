@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Log Viewer</title>
+</head>
+<body>
+  <h1>Log Viewer</h1>
+  <hr>
+  <div id="log_viewer">
+    <!-- 여기에 로그가 쌓일거임, 스크롤 가능한 텍스트에리어 -->
+    <textarea id="log_viewer_textarea" style="width: 100%; height: 500px;"></textarea>
+  </div>
+  <script>
+    // 마지막 로그의 id
+    let lastId = "-"
+
+    const service = "{{ service }}"
+    const logViewerTextarea = document.getElementById("log_viewer_textarea")
+    const logViewer = document.getElementById("log_viewer")
+
+    // 로그를 가져오는 함수
+    function getUrl(service, lastId) {
+      return `http://localhost:18086/log/${service}/string?last_id=${lastId}&limit=50`
+    }
+
+    async function getLog(url, last_id) {
+      response = await fetch(url)
+      data = await response.json()
+      // data.logs is array
+      // if array length is 0, return null
+      if (data.logs.length == 0) {
+        return null
+      }
+      // 가져온 로그를 텍스트에리어에 추가
+      logViewerTextarea.value += data.logs
+      // 텍스트에리어를 맨 아래로 스크롤
+      logViewerTextarea.scrollTop = logViewerTextarea.scrollHeight
+      // 마지막 로그의 id + 1를 반환
+      // id는 "10111101-1" 과 같은 형태여서 - 를 기준으로 잘라서 +1을 해줌
+      return parseInt(data.last_id.split("-")[0]) + 1 + ""
+    }
+
+    // 로그를 가져오는 함수를 1초마다 실행
+    setInterval(async () => {
+      url = getUrl(service, lastId)
+      returnedLastId = await getLog(url, lastId)
+      if (returnedLastId != null) {
+        lastId = returnedLastId
+      }
+    }, 1000)
+
+  </script>
+</body>
+</html>

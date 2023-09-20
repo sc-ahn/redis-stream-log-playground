@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  app:
+    image: app
+    build:
+      context: .
+      dockerfile: app.Dockerfile
+    ports:
+      - "18086:8000"
+    volumes:
+      - ./app:/huray/app/app
+      - ./templates:/huray/app/templates
+    depends_on:
+      - log-farm
+  log-farm:
+    image: redis
+    command: >
+      --requirepass a1234a
+    ports:
+      - "18087:6379"
